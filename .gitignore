@@ -1,0 +1,5 @@
+*.pyc
+*~
+*.sqlite*
+*.log*
+src/collected-static/**
