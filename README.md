@@ -16,12 +16,12 @@ found `virtualenv` with the `virtualenvwrapper` tools are very convenient.
 
 Clone the repo, link to the relevant settings.py file:
 
-  $ git clone elifesciences/elife-api.git
-  $ mkvirtualenv elife-api && workon elife-api
-  $ pip install -r requirements.txt
-  $ cd elife-api/src/core/ && ln -s dev_settings.py settings.py  
+    $ git clone elifesciences/elife-api.git
+    $ mkvirtualenv elife-api && workon elife-api
+    $ pip install -r requirements.txt
+    $ cd elife-api/src/core/ && ln -s dev_settings.py settings.py  
   
 Start the development server to test everything is working:
 
-  $ ./manage.py runserver
+    $ ./manage.py runserver
 
