@@ -5,7 +5,7 @@ simple interface accessible using HTTP.
 
 ## pre-requisites
 
-* Python3.4 +
+* Python3 +
 * pip
 * virtualenvwrapper
 
