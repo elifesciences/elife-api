@@ -28,34 +28,76 @@ def example_route(request, arg1, arg2):
         headers=headers)
 
 class pdf_file():
-    def __init__ (self, doi = None):
+    def __init__ (self, doi, type):
         self.doi = doi
-
+        self.type = type
+        
+    def get_doi_id(self):
+        """
+        Parse DOI value which can be number or string
+        """
+        try:
+            return int(self.doi)
+        except ValueError:
+            return int(self.doi.split('.')[-1])
+        
+    def get_baseurl(self):
+        if self.type == "figures":
+            return 'http://s3.amazonaws.com/elife-figure-pdfs/'
+        elif self.type == "article":
+            return ('http://cdn.elifesciences.org/elife-articles/'
+                            + str(self.get_doi_id()).zfill(5)
+                            + '/')
+            
     def get_url(self):
         
-        doi_id = int(self.doi.split('.')[-1])
-        
-        return ('http://example.org/'
-                + str(doi_id).zfill(5)
-                + '/elife'
-                + str(doi_id).zfill(5)
-                + '.pdf')
+        if self.type == "figures":
+            return (self.get_baseurl()
+                    + 'elife'
+                    + str(self.get_doi_id()).zfill(5)
+                    + '-figures.pdf')
+        elif self.type == "article":
+            return (self.get_baseurl()
+                    + 'pdf/'
+                    + 'elife'
+                    + str(self.get_doi_id()).zfill(5)
+                    + '.pdf')
 
 @api_view(['GET'])
-def pdf(request):
+def pdf(request, doi):
     """
     Get a PDF file URI
-    doi -- An article DOI
+    type -- The type of PDF, 'figures' or 'article'
     """
     
+    pdf_types = ['figures','article']
+    
     try:
-        pdf = pdf_file(request.QUERY_PARAMS['doi'])
-        
-        response_list = {}
-        response_list['url'] = pdf.get_url()
-    
-        return Response(response_list)
+        if request.QUERY_PARAMS['type']:
+            # Validate type - TODO!!
+            types = []
+            types.append(request.QUERY_PARAMS['type'])
     except:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
+        types = pdf_types
+        
+    data = []
+    for pdf_type in types:
+        try:
+            pdf = pdf_file(doi, pdf_type)
+            
+            # Add data
+            item = {}
+            item['url'] = pdf.get_url()
+            item['type'] = pdf_type
+            data.append(item)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    response_list = {}
+    response_list['data'] = data
+        
+    # Add metadata
+    response_list['results'] = len(data)
+
+    return Response(response_list)
 

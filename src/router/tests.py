@@ -62,3 +62,20 @@ class Routing(TestCase):
             except Exception:
                 print('failed on',url)
                 raise
+
+    def test_correct_pdf(self):
+        "test pdf file data"
+        passes = [
+            (('10.7554/eLife.00003'), () ),
+            (('10.7554/eLife.00003'), ({'type': 'figures'})),
+            (('00003'),               () ),
+            (('00003'),               ({'type': 'article'})),
+        ]
+        for args,params in passes:
+            try:
+                url = '/v1/pdf/%s' % args
+                response = self.client.get(url, params)
+                self.assertEqual(response.status_code, 200) # if you prefer
+            except Exception:
+                print('failed on',url)
+                raise
