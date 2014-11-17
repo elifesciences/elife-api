@@ -64,22 +64,19 @@ class pdf_file():
                     + '.pdf')
 
 @api_view(['GET'])
-def pdf(request, doi):
+def pdf(request, doi, type = None):
     """
-    Get a PDF file URI
-    type -- The type of PDF, 'figures' or 'article'
+    Get PDF file locations in JSON format.
     """
     
     pdf_types = ['figures','article']
     
-    try:
-        if request.QUERY_PARAMS['type']:
-            # Validate type - TODO!!
-            types = []
-            types.append(request.QUERY_PARAMS['type'])
-    except:
+    if type:
+        types = []
+        types.append(type)
+    else:
         types = pdf_types
-        
+
     data = []
     for pdf_type in types:
         try:
@@ -101,3 +98,11 @@ def pdf(request, doi):
 
     return Response(response_list)
 
+@api_view(['GET'])
+def pdf_by_type(request, doi, type):
+    """
+    Get a PDF file URI
+    The pdf_type can be 'figures' or 'article'
+    """
+    return pdf(request, doi, type)
+    
