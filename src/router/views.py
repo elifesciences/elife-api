@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+import requests
 
 @api_view(['GET'])
 def hello_world(request):
@@ -63,6 +64,18 @@ class pdf_file():
                     + str(self.get_doi_id()).zfill(5)
                     + '.pdf')
 
+def check_url_exists(url):
+    """
+    Check if a URL exists by HEAD request
+    """
+    r = requests.head(url, allow_redirects=True)
+    if r.status_code == requests.codes.ok:
+        return r.url
+    else:
+        return None
+    return None
+
+
 @api_view(['GET'])
 def pdf(request, doi, type = None):
     """
@@ -78,15 +91,23 @@ def pdf(request, doi, type = None):
         types = pdf_types
 
     data = []
+    notes = []
     for pdf_type in types:
         try:
             pdf = pdf_file(doi, pdf_type)
             
-            # Add data
-            item = {}
-            item['url'] = pdf.get_url()
-            item['type'] = pdf_type
-            data.append(item)
+            # Check if URL exists
+            if check_url_exists(pdf.get_url()) is not None:
+                # Add data
+                item = {}
+                item['url'] = pdf.get_url()
+                item['type'] = pdf_type
+                data.append(item)
+            else:
+                # Append notes
+                #notes.append('%s does not exist' % pdf.get_url())
+                pass
+               
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -94,6 +115,8 @@ def pdf(request, doi, type = None):
     response_list['data'] = data
         
     # Add metadata
+    if len(notes) > 0:
+        response_list['notes'] = notes
     response_list['results'] = len(data)
 
     return Response(response_list)
