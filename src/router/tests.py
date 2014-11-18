@@ -66,16 +66,19 @@ class Routing(TestCase):
     def test_correct_pdf(self):
         "test pdf file data"
         passes = [
-            (('10.7554/eLife.00003'), () ),
-            (('10.7554/eLife.00003'), ({'type': 'figures'})),
-            (('00003'),               () ),
-            (('00003'),               ({'type': 'article'})),
+            ('10.7554/eLife.00003'),
+            ('10.7554/eLife.00003', 'figures'),
+            ('00003'),
+            ('00003', 'article'),
         ]
-        for args,params in passes:
+        for args in passes:
             try:
-                url = '/v1/pdf/%s' % args
-                response = self.client.get(url, params)
+                if type(args) == tuple:
+                    url = '/v1/%s/pdf/%s' % args
+                else:
+                    url = '/v1/%s/pdf' % args
+                response = self.client.get(url)
                 self.assertEqual(response.status_code, 200) # if you prefer
             except Exception:
-                print('failed on',url)
+                print('failed on',args)
                 raise
