@@ -27,4 +27,4 @@ Start the development server to test everything is working:
 
 ## using
 
-Go to http://localhost:8000/docs to try and view documentation.
+Go to http://localhost:8000/docs to try it and read documentation.
