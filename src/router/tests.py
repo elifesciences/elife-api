@@ -24,7 +24,7 @@ class Routing(TestCase):
         ]
         for args in passes:
             try:
-                url = '/v1/%s/%s/' % args
+                url = '/v2/%s/%s/' % args
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, 302) # if you prefer
             except Exception:
@@ -56,7 +56,7 @@ class Routing(TestCase):
         ]
         for args in fails:
             try:
-                url = '/v1/%s/%s/' % args
+                url = '/v2/%s/%s/' % args
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, 404)
             except Exception:
@@ -74,9 +74,9 @@ class Routing(TestCase):
         for args in passes:
             try:
                 if type(args) == tuple:
-                    url = '/v1/%s/pdf/%s' % args
+                    url = '/v2/articles/%s/pdf/%s' % args
                 else:
-                    url = '/v1/%s/pdf' % args
+                    url = '/v2/articles/%s/pdf' % args
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, 200) # if you prefer
             except Exception:
