@@ -74,9 +74,9 @@ class Routing(TestCase):
         for args in passes:
             try:
                 if type(args) == tuple:
-                    url = '/v2/%s/pdf/%s' % args
+                    url = '/v2/articles/%s/pdf/%s' % args
                 else:
-                    url = '/v2/%s/pdf' % args
+                    url = '/v2/articles/%s/pdf' % args
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, 200) # if you prefer
             except Exception:
