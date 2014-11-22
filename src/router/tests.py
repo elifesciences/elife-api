@@ -82,3 +82,18 @@ class Routing(TestCase):
             except Exception:
                 print('failed on',args)
                 raise
+            
+    def test_correct_media(self):
+        "test media file data"
+        passes = [
+            ('10.7554/eLife.03145', 'elife03145v001', 'jpg'),
+        ]
+        for args in passes:
+            try:
+                if type(args) == tuple:
+                    url = '/v2/articles/%s/media/%s/%s' % args
+                response = self.client.get(url)
+                self.assertEqual(response.status_code, 200) # if you prefer
+            except Exception:
+                print('failed on',args)
+                raise
