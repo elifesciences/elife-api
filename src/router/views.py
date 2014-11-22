@@ -94,3 +94,37 @@ def pdf_by_type(request, doi, type):
     """
     return pdf(request, doi, type)
     
+@api_view(['GET'])
+def media(request, doi, xlink = None, filetype = None):
+    """
+    Get media file locations in JSON format.
+    """
+    
+    data = []
+    file = None
+    
+    # Given a DOI, xlink and filetype
+    if doi is not None and xlink is not None and filetype is not None:
+        file = media_file(doi, xlink, filetype)
+        if check_url_exists(file.get_url()) is not None:
+            # Add data
+            item = {}
+            item['url'] = file.get_url()
+            item['filetype'] = filetype
+            data.append(item)
+    
+    response_list = {}
+    response_list['data'] = data
+    response_list['results'] = len(data)
+
+    return Response(response_list)
+    
+@api_view(['GET'])
+def media_xlink_format(request, doi, xlink, filetype):
+    """
+    Get a specific media file by specifying the xlink and filetype
+    filetype for videos can be 'jpg', 'mp4', 'ogv', 'webm'
+    """
+    return media(request, doi, xlink, filetype)
+
+    
