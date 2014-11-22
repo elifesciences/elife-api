@@ -117,13 +117,22 @@ def media(request, doi, xlink = None, filetype = None):
     response_list['data'] = data
     response_list['results'] = len(data)
 
-    return Response(response_list)
+    if request.QUERY_PARAMS.get('redirect') is not None and len(response_list['data']) == 1:
+        headers = {}
+        headers['Location'] = response_list['data'][0]['url']
+        return Response(
+            status=status.HTTP_302_FOUND,
+            headers=headers)
+    else:
+        return Response(response_list)
     
 @api_view(['GET'])
 def media_xlink_format(request, doi, xlink, filetype):
     """
     Get a specific media file by specifying the xlink and filetype
     filetype for videos can be 'jpg', 'mp4', 'ogv', 'webm'
+    
+    redirect -- If set (to any value) redirect to the URL
     """
     return media(request, doi, xlink, filetype)
 
