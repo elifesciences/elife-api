@@ -2,11 +2,16 @@
 
 # Create your models here.
 
-class pdf_file():
-    def __init__ (self, doi, type):
-        self.doi = doi
-        self.type = type
-        
+class elife_file():
+    """
+    Base class for a file in the eLife system,
+    a place for common code
+    """
+    def __init__ (self):
+        self.cdn_base_url = 'http://cdn.elifesciences.org/'
+        self.figure_pdf_base_url = 'http://s3.amazonaws.com/elife-figure-pdfs/'
+        self.cdn_articles_folder = 'elife-articles/'
+    
     def get_doi_id(self):
         """
         Parse DOI value which can be number or string
@@ -15,12 +20,18 @@ class pdf_file():
             return int(self.doi)
         except ValueError:
             return int(self.doi.split('.')[-1])
+
+class pdf_file(elife_file):
+    def __init__ (self, doi, type):
+        elife_file.__init__(self)
+        self.doi = doi
+        self.type = type
         
     def get_baseurl(self):
         if self.type == "figures":
-            return 'http://s3.amazonaws.com/elife-figure-pdfs/'
+            return self.figure_pdf_base_url
         elif self.type == "article":
-            return ('http://cdn.elifesciences.org/elife-articles/'
+            return (self.cdn_base_url + self.cdn_articles_folder
                             + str(self.get_doi_id()).zfill(5)
                             + '/')
             
@@ -38,24 +49,16 @@ class pdf_file():
                     + str(self.get_doi_id()).zfill(5)
                     + '.pdf')
             
-class media_file():
+class media_file(elife_file):
     def __init__ (self, doi, xlink, filetype):
+        elife_file.__init__(self)
         self.doi = doi
         self.xlink = xlink
         self.filetype = filetype
         
-    def get_doi_id(self):
-        """
-        Parse DOI value which can be number or string
-        """
-        try:
-            return int(self.doi)
-        except ValueError:
-            return int(self.doi.split('.')[-1])
-        
     def get_baseurl(self):
         if self.filetype == "jpg":
-            return ('http://cdn.elifesciences.org/elife-articles/'
+            return (self.cdn_base_url + self.cdn_articles_folder
                             + str(self.get_doi_id()).zfill(5)
                             + '/jpg'
                             + '/')
