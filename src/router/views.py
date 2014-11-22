@@ -59,7 +59,7 @@ def pdf(request, doi, type = None):
     notes = []
     for pdf_type in types:
         try:
-            pdf = pdf_file(doi, pdf_type)
+            pdf = PdfFile(doi, pdf_type)
             
             # Check if URL exists
             if check_url_exists(pdf.get_url()) is not None:
@@ -105,7 +105,7 @@ def media(request, doi, xlink = None, filetype = None):
     
     # Given a DOI, xlink and filetype
     if doi is not None and xlink is not None and filetype is not None:
-        file = media_file(doi, xlink, filetype)
+        file = MediaFile(doi, xlink, filetype)
         if check_url_exists(file.get_url()) is not None:
             # Add data
             item = {}

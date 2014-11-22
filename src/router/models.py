@@ -2,7 +2,7 @@
 
 # Create your models here.
 
-class elife_file():
+class eLifeFile():
     """
     Base class for a file in the eLife system,
     a place for common code
@@ -21,9 +21,9 @@ class elife_file():
         except ValueError:
             return int(self.doi.split('.')[-1])
 
-class pdf_file(elife_file):
+class PdfFile(eLifeFile):
     def __init__ (self, doi, type):
-        elife_file.__init__(self)
+        eLifeFile.__init__(self)
         self.doi = doi
         self.type = type
         
@@ -49,9 +49,9 @@ class pdf_file(elife_file):
                     + str(self.get_doi_id()).zfill(5)
                     + '.pdf')
             
-class media_file(elife_file):
+class MediaFile(eLifeFile):
     def __init__ (self, doi, xlink, filetype):
-        elife_file.__init__(self)
+        eLifeFile.__init__(self)
         self.doi = doi
         self.xlink = xlink
         self.filetype = filetype
