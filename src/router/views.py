@@ -44,7 +44,7 @@ class pdf_file():
         
     def get_baseurl(self):
         if self.type == "figures":
-            return 'http://s3.amazonaws.com/elife-figure-pdfs/'
+            return 'http://cdn.elifesciences.org/figure-pdf/'
         elif self.type == "article":
             return ('http://cdn.elifesciences.org/elife-articles/'
                             + str(self.get_doi_id()).zfill(5)
