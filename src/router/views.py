@@ -66,6 +66,7 @@ def pdf(request, doi, type = None):
                 # Add data
                 item = {}
                 item['url'] = pdf.get_url()
+                item['size'] = pdf.get_size_from_s3()
                 item['type'] = pdf_type
                 data.append(item)
             else:
