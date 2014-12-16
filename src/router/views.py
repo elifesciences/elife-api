@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import requests
+from models import *
 
 def redirect(dest):
     return HttpResponseRedirect(dest)
@@ -39,43 +40,6 @@ def example_route(request, arg1, arg2):
         status=status.HTTP_302_FOUND,
         headers=headers)
 
-class pdf_file():
-    def __init__ (self, doi, type):
-        self.doi = doi
-        self.type = type
-        
-    def get_doi_id(self):
-        """
-        Parse DOI value which can be number or string
-        """
-        try:
-            return int(self.doi)
-        except ValueError:
-            return int(self.doi.split('.')[-1])
-        
-    def get_baseurl(self):
-        if self.type == "figures":
-            return 'http://cdn.elifesciences.org/figure-pdf/'
-        elif self.type == "article":
-            return ('http://cdn.elifesciences.org/elife-articles/'
-                            + str(self.get_doi_id()).zfill(5)
-                            + '/')
-            
-    def get_url(self):
-        
-        if self.type == "figures":
-            return (self.get_baseurl()
-                    + 'elife'
-                    + str(self.get_doi_id()).zfill(5)
-                    + '-figures.pdf')
-        elif self.type == "article":
-            return (self.get_baseurl()
-                    + 'pdf/'
-                    + 'elife'
-                    + str(self.get_doi_id()).zfill(5)
-                    + '.pdf')
-
-
 
 @api_view(['GET'])
 def pdf(request, doi, type = None):
@@ -95,7 +59,7 @@ def pdf(request, doi, type = None):
     notes = []
     for pdf_type in types:
         try:
-            pdf = pdf_file(doi, pdf_type)
+            pdf = PdfFile(doi, pdf_type)
             
             # Check if URL exists
             if check_url_exists(pdf.get_url()) is not None:
