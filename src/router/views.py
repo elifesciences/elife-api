@@ -5,12 +5,23 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import requests
 
+def redirect(dest):
+    return HttpResponseRedirect(dest)
+
+def check_url_exists(url):
+    """
+    Check if a URL exists by HEAD request
+    """
+    r = requests.head(url, allow_redirects=True)
+    if r.status_code == requests.codes.ok:
+        return r.url
+    else:
+        return None
+    return None
+
 @api_view(['GET'])
 def hello_world(request):
     return Response({"message": "Hello, world!"})
-
-def redirect(dest):
-    return HttpResponseRedirect(dest)
 
 @api_view(['GET'])
 def example_route(request, arg1, arg2):
@@ -64,16 +75,6 @@ class pdf_file():
                     + str(self.get_doi_id()).zfill(5)
                     + '.pdf')
 
-def check_url_exists(url):
-    """
-    Check if a URL exists by HEAD request
-    """
-    r = requests.head(url, allow_redirects=True)
-    if r.status_code == requests.codes.ok:
-        return r.url
-    else:
-        return None
-    return None
 
 
 @api_view(['GET'])
