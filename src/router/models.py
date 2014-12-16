@@ -44,17 +44,15 @@ class eLifeFile():
         
         url = bucket_url + '?prefix=' + prefix
         r = requests.get(url)
-        print url
+        #print url
         if r.status_code == requests.codes.ok:
 
             root = ElementTree.fromstring(r.text)
 
             for contents_tag in root.findall('{http://s3.amazonaws.com/doc/2006-03-01/}Contents'):
-                print contents_tag.tag
-                print "something"
+                #print contents_tag.tag
                 for key_tag in contents_tag.findall('{http://s3.amazonaws.com/doc/2006-03-01/}Key'):
-                    print key_tag.text
-                    print prefix
+                    #print key_tag.text
                     if key_tag.text == prefix:
                         # A match, return the Size
                         for size_tag in contents_tag.findall('{http://s3.amazonaws.com/doc/2006-03-01/}Size'):
