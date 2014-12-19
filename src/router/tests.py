@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.test.client import Client
+from models import *
 
 class Routing(TestCase):
     def setUp(self):
@@ -82,3 +83,38 @@ class Routing(TestCase):
             except Exception:
                 print('failed on',args)
                 raise
+            
+class eLifeTestCase(TestCase):
+    def setUp(self):
+        self.elf = eLifeFile()
+
+    def tearDown(self):
+        pass
+    
+    def test_parse_s3_xml(self):
+        "test parsing S3 object metadata XML"
+        
+        # Result of
+        # GET http://s3.amazonaws.com/elife-figure-pdfs?prefix=figure-pdf/elife00829-figures.pdf
+        prefix = 'figure-pdf/elife00829-figures.pdf'
+        xml_string = ('<?xml version="1.0" encoding="UTF-8"?>'
+                      + '<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">'
+                      + '<Name>elife-figure-pdfs</Name>'
+                      + '<Prefix>figure-pdf/elife00829-figures.pdf</Prefix>'
+                      + '<Marker></Marker>'
+                      + '<MaxKeys>1000</MaxKeys>'
+                      + '<IsTruncated>false</IsTruncated>'
+                      + '<Contents>'
+                      + '<Key>figure-pdf/elife00829-figures.pdf</Key>'
+                      + '<LastModified>2014-11-25T16:56:05.000Z</LastModified>'
+                      + '<ETag>&quot;82200c757af15dd8c0c85a39f74e4661&quot;</ETag>'
+                      + '<Size>768145</Size>'
+                      + '<StorageClass>STANDARD</StorageClass>'
+                      + '</Contents></ListBucketResult>')
+        size = 768145
+        
+        s3_data = self.elf.parse_s3_xml(xml_string)
+        
+        self.assertEqual(size, s3_data[prefix]['size'])
+
+    
