@@ -68,6 +68,7 @@ class PdfFile(eLifeFile):
         eLifeFile.__init__(self)
         self.doi = doi
         self.type = type
+        self.file_type = 'pdf'
         
     def get_foldername(self):
         """

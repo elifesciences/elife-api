@@ -63,11 +63,14 @@ def pdf(request, doi, type = None):
             
             # Check if URL exists
             if check_url_exists(pdf.get_url()) is not None:
-                # Add data
+                # Add data from the object
                 item = {}
+                item['doi'] = pdf.get_doi()
+                item['doi_id'] = pdf.get_doi_id()
+                item['file_type'] = pdf.file_type
                 item['url'] = pdf.get_url()
                 item['size'] = pdf.get_size_from_s3()
-                item['type'] = pdf_type
+                item['type'] = pdf.type
                 data.append(item)
             else:
                 # Append notes
