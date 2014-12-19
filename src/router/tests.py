@@ -117,4 +117,28 @@ class eLifeTestCase(TestCase):
         
         self.assertEqual(size, s3_data[prefix]['size'])
 
-    
+    def test_correct_get_doi(self):
+        "test get DOI"
+        passes = [
+            (3, '10.7554/eLife.00003'),
+            ('03', '10.7554/eLife.00003'),
+            ('00003', '10.7554/eLife.00003'),
+            ('10.7554/eLife.00003', '10.7554/eLife.00003')
+            ]
+        
+        for args in passes:
+            self.elf.doi = args[0]
+            self.assertEqual(self.elf.get_doi(), args[1])
+        
+    def test_correct_get_doi_id(self):
+        "test get DOI id"
+        passes = [
+            (3, 3),
+            ('03', 3),
+            ('00003', 3),
+            ('10.7554/eLife.00003', 3)
+            ]
+        
+        for args in passes:
+            self.elf.doi = args[0]
+            self.assertEqual(self.elf.get_doi_id(), args[1])
