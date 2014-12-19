@@ -48,20 +48,37 @@ class eLifeFile():
         #print url
         if r.status_code == requests.codes.ok:
 
-            root = ElementTree.fromstring(r.text)
-
-            for contents_tag in root.findall('{http://s3.amazonaws.com/doc/2006-03-01/}Contents'):
-                #print contents_tag.tag
-                for key_tag in contents_tag.findall('{http://s3.amazonaws.com/doc/2006-03-01/}Key'):
-                    #print key_tag.text
-                    if key_tag.text == prefix:
-                        # A match, return the Size
-                        for size_tag in contents_tag.findall('{http://s3.amazonaws.com/doc/2006-03-01/}Size'):
-                            return int(size_tag.text)
-
+            s3_data = self.parse_s3_xml(r.text)
+            if s3_data:
+                try:
+                    return s3_data[prefix]['size']
+                except:
+                    return None
         else:
             return None
 
+    def parse_s3_xml(self, xml_string):
+        """
+        Given an XML string from an S3 object query,
+        return JSON data about the object named s3_key_name
+        Currently supports extracting the Size value at time of writing
+        """
+        
+        s3_data = {}
+        
+        root = ElementTree.fromstring(xml_string)
+        
+        for contents_tag in root.findall('{http://s3.amazonaws.com/doc/2006-03-01/}Contents'):
+            #print contents_tag.tag
+            for key_tag in contents_tag.findall('{http://s3.amazonaws.com/doc/2006-03-01/}Key'):
+                #print key_tag.text
+                for size_tag in contents_tag.findall('{http://s3.amazonaws.com/doc/2006-03-01/}Size'):
+                    if key_tag.text not in s3_data.keys():
+                        # Create dict index for the key if not exists already
+                        s3_data[key_tag.text] = {}
+                    s3_data[key_tag.text]['size'] = int(size_tag.text)
+        
+        return s3_data
 
 class PdfFile(eLifeFile):
     def __init__ (self, doi, type):
