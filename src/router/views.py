@@ -4,13 +4,25 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import requests
+from models import *
+
+def redirect(dest):
+    return HttpResponseRedirect(dest)
+
+def check_url_exists(url):
+    """
+    Check if a URL exists by HEAD request
+    """
+    r = requests.head(url, allow_redirects=True)
+    if r.status_code == requests.codes.ok:
+        return r.url
+    else:
+        return None
+    return None
 
 @api_view(['GET'])
 def hello_world(request):
     return Response({"message": "Hello, world!"})
-
-def redirect(dest):
-    return HttpResponseRedirect(dest)
 
 @api_view(['GET'])
 def example_route(request, arg1, arg2):
@@ -27,53 +39,6 @@ def example_route(request, arg1, arg2):
     return Response(
         status=status.HTTP_302_FOUND,
         headers=headers)
-
-class pdf_file():
-    def __init__ (self, doi, type):
-        self.doi = doi
-        self.type = type
-        
-    def get_doi_id(self):
-        """
-        Parse DOI value which can be number or string
-        """
-        try:
-            return int(self.doi)
-        except ValueError:
-            return int(self.doi.split('.')[-1])
-        
-    def get_baseurl(self):
-        if self.type == "figures":
-            return 'http://cdn.elifesciences.org/figure-pdf/'
-        elif self.type == "article":
-            return ('http://cdn.elifesciences.org/elife-articles/'
-                            + str(self.get_doi_id()).zfill(5)
-                            + '/')
-            
-    def get_url(self):
-        
-        if self.type == "figures":
-            return (self.get_baseurl()
-                    + 'elife'
-                    + str(self.get_doi_id()).zfill(5)
-                    + '-figures.pdf')
-        elif self.type == "article":
-            return (self.get_baseurl()
-                    + 'pdf/'
-                    + 'elife'
-                    + str(self.get_doi_id()).zfill(5)
-                    + '.pdf')
-
-def check_url_exists(url):
-    """
-    Check if a URL exists by HEAD request
-    """
-    r = requests.head(url, allow_redirects=True)
-    if r.status_code == requests.codes.ok:
-        return r.url
-    else:
-        return None
-    return None
 
 
 @api_view(['GET'])
@@ -94,14 +59,18 @@ def pdf(request, doi, type = None):
     notes = []
     for pdf_type in types:
         try:
-            pdf = pdf_file(doi, pdf_type)
+            pdf = PdfFile(doi, pdf_type)
             
             # Check if URL exists
             if check_url_exists(pdf.get_url()) is not None:
-                # Add data
+                # Add data from the object
                 item = {}
+                item['doi'] = pdf.get_doi()
+                item['doi_id'] = pdf.get_doi_id()
+                item['file_type'] = pdf.file_type
                 item['url'] = pdf.get_url()
-                item['type'] = pdf_type
+                item['size'] = pdf.get_size_from_s3()
+                item['type'] = pdf.type
                 data.append(item)
             else:
                 # Append notes
