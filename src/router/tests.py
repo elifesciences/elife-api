@@ -95,22 +95,23 @@ class eLifeTestCase(TestCase):
         "test parsing S3 object metadata XML"
         
         # Result of
-        # GET http://s3.amazonaws.com/elife-figure-pdfs?prefix=figure-pdf/elife00829-figures.pdf
-        prefix = 'figure-pdf/elife00829-figures.pdf'
+        # GET http://s3.amazonaws.com/elife-cdn?prefix=elife-articles/00829/figures-pdf/elife00829-figures.pdf
+        prefix = 'elife-articles/00829/figures-pdf/elife00829-figures.pdf'
         xml_string = ('<?xml version="1.0" encoding="UTF-8"?>'
-                      + '<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">'
-                      + '<Name>elife-figure-pdfs</Name>'
-                      + '<Prefix>figure-pdf/elife00829-figures.pdf</Prefix>'
-                      + '<Marker></Marker>'
-                      + '<MaxKeys>1000</MaxKeys>'
-                      + '<IsTruncated>false</IsTruncated>'
-                      + '<Contents>'
-                      + '<Key>figure-pdf/elife00829-figures.pdf</Key>'
-                      + '<LastModified>2014-11-25T16:56:05.000Z</LastModified>'
-                      + '<ETag>&quot;82200c757af15dd8c0c85a39f74e4661&quot;</ETag>'
-                      + '<Size>768145</Size>'
-                      + '<StorageClass>STANDARD</StorageClass>'
-                      + '</Contents></ListBucketResult>')
+                        + '<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">'
+                        + '<Name>elife-cdn</Name>'
+                        + '<Prefix>elife-articles/00829/figures-pdf/elife00829-figures.pdf</Prefix>'
+                        + '<Marker></Marker>'
+                        + '<MaxKeys>1000</MaxKeys>'
+                        + '<IsTruncated>false</IsTruncated>'
+                        + '<Contents>'
+                        + '<Key>elife-articles/00829/figures-pdf/elife00829-figures.pdf</Key>'
+                        + '<LastModified>2015-01-29T23:50:00.000Z</LastModified>'
+                        + '<ETag>&quot;82200c757af15dd8c0c85a39f74e4661&quot;</ETag>'
+                        + '<Size>768145</Size>'
+                        + '<StorageClass>STANDARD</StorageClass>'
+                        + '</Contents>'
+                        + '</ListBucketResult>')
         size = 768145
         
         s3_data = self.elf.parse_s3_xml(xml_string)

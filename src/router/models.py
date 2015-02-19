@@ -12,14 +12,12 @@ class eLifeFile():
     def __init__ (self):
         self.cdn_base_url = 'http://cdn.elifesciences.org/'
         self.s3_base_url = 'http://s3.amazonaws.com/'
-        self.figure_pdf_folder = 'figure-pdf/'
         self.cdn_articles_folder = 'elife-articles/'
         self.glencoe_api_base_url = 'http://movie-usa.glencoesoftware.com/'
         self.glencoe_metadata_endpoint = 'metadata/'
         
         # Bucket names
         self.cdn_bucket_name = 'elife-cdn'
-        self.figure_pdf_bucket_name = 'elife-figure-pdfs'
     
     def get_doi_id(self):
         """
@@ -93,7 +91,9 @@ class PdfFile(eLifeFile):
         It is used in both the CDN URL and the S3 bucket URL
         """
         if self.type == "figures":
-            return self.figure_pdf_folder
+            return (self.cdn_articles_folder
+                            + str(self.get_doi_id()).zfill(5)
+                            + '/' + 'figures-pdf/')
         elif self.type == "article":
             return (self.cdn_articles_folder
                             + str(self.get_doi_id()).zfill(5)
@@ -126,7 +126,7 @@ class PdfFile(eLifeFile):
 
         # Specify in which bucket the file is stored
         if self.type == "figures":
-            bucket_url = self.s3_base_url + self.figure_pdf_bucket_name
+            bucket_url = self.s3_base_url + self.cdn_bucket_name
         elif self.type == "article":
             bucket_url = self.s3_base_url + self.cdn_bucket_name
         
