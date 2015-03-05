@@ -25,6 +25,21 @@ def check_url_exists(url):
 def hello_world(request):
     return Response({"message": "Hello, world!"})
 
+def check_url_exists(url):
+    """
+    Check if a URL exists by HEAD request
+    """
+    r = requests.head(url, allow_redirects=True)
+    if r.status_code == requests.codes.ok:
+        return r.url
+    else:
+        return None
+    return None
+
+@api_view(['GET'])
+def hello_world(request):
+    return Response({"message": "Hello, world!"})
+
 @api_view(['GET'])
 def example_route(request, arg1, arg2):
     """
@@ -63,10 +78,14 @@ def pdf(request, doi, type = None):
             
             # Check if URL exists
             if check_url_exists(pdf.get_url()) is not None:
-                # Add data
+                # Add data from the object
                 item = {}
+                item['doi'] = pdf.get_doi()
+                item['doi_id'] = pdf.get_doi_id()
+                item['file_type'] = pdf.file_type
                 item['url'] = pdf.get_url()
-                item['type'] = pdf_type
+                item['size'] = pdf.get_size_from_s3()
+                item['type'] = pdf.type
                 data.append(item)
             else:
                 # Append notes
