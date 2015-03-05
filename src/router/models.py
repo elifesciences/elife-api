@@ -142,19 +142,8 @@ class MediaFile(eLifeFile):
         self.xlink = xlink
         self.filetype = filetype
         
-    def get_baseurl(self):
-        if self.filetype == "jpg":
-            return (self.cdn_base_url + self.cdn_articles_folder
-                            + str(self.get_doi_id()).zfill(5)
-                            + '/jpg'
-                            + '/')
-    
     def get_url(self):
-        if self.filetype == "jpg":
-            return (self.get_baseurl()
-                    + self.xlink
-                    + '.jpg')
-        elif self.filetype in ['mp4', 'webm', 'ogv']:
+        if self.filetype in ['mp4', 'webm', 'ogv', 'jpg']:
             return self.get_url_from_glencoe(self.filetype)
 
     def get_url_from_glencoe(self, filetype):
@@ -169,7 +158,7 @@ class MediaFile(eLifeFile):
                     video_xlink =  r.json[video]['ogv_href'].split('/')[-1].split('.')[0]
                 except:
                     video_xlink = None
-                if video_xlink == self.xlink:
+                if video_xlink == self.xlink.split('.')[0]:
                     video_json = r.json[video]
                     
         if video_json:
@@ -179,3 +168,5 @@ class MediaFile(eLifeFile):
                 return video_json['webm_href']
             elif self.filetype == "ogv":
                 return video_json['ogv_href']
+            elif self.filetype == "jpg":
+                return video_json['jpg_href']

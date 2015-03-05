@@ -88,6 +88,7 @@ class Routing(TestCase):
         "test media file data"
         passes = [
             ('10.7554/eLife.03145', 'elife03145v001', 'jpg'),
+            ('10.7554/eLife.03145', 'elife03145v001.AVI', 'mp4')
         ]
         for args in passes:
             try:
