@@ -114,7 +114,7 @@ def pdf_by_type(request, doi, type):
     return pdf(request, doi, type)
     
 @api_view(['GET'])
-def media(request, doi, xlink = None, filetype = None):
+def media(request, doi, xlink = None, filetype = None, redirect = None):
     """
     Get media file locations in JSON format.
     """
@@ -136,7 +136,9 @@ def media(request, doi, xlink = None, filetype = None):
     response_list['data'] = data
     response_list['results'] = len(data)
 
-    if request.QUERY_PARAMS.get('redirect') is not None and len(response_list['data']) == 1:
+    if ( redirect is True or
+        (request.QUERY_PARAMS.get('redirect') is not None and len(response_list['data']) == 1)
+        ):
         headers = {}
         headers['Location'] = response_list['data'][0]['url']
         return Response(
@@ -144,6 +146,27 @@ def media(request, doi, xlink = None, filetype = None):
             headers=headers)
     else:
         return Response(response_list)
+    
+@api_view(['GET'])
+def media_file(request, doi, filename):
+    """
+    Get a specific media file
+    and redirect to the file after locating the file at the third-party media provider
+    Specifically this is useful in displaying videos in eLife Lens
+    
+    filename includes the name and file extension, e.g. 'elife00007v001.jpg' or 'elife00007v001.mp4'
+    """
+    
+    try:
+        xlink = filename.split(".")[0]
+        filetype = filename.split(".")[1]
+    except:
+        xlink = None
+        filetype = None
+
+    redirect = True
+    
+    return media(request, doi, xlink, filetype, redirect)
     
 @api_view(['GET'])
 def media_xlink_format(request, doi, xlink, filetype):
