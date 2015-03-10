@@ -152,14 +152,15 @@ class MediaFile(eLifeFile):
         
         video_json = None
         if r.status_code == requests.codes.ok:
-            for video in r.json:
+            request_json = r.json()
+            for video in request_json:
                 # Get one of the URLs to compare with the xlink
                 try:
-                    video_xlink =  r.json[video]['ogv_href'].split('/')[-1].split('.')[0]
+                    video_xlink =  request_json[video]['ogv_href'].split('/')[-1].split('.')[0]
                 except:
                     video_xlink = None
                 if video_xlink == self.xlink.split('.')[0]:
-                    video_json = r.json[video]
+                    video_json = request_json[video]
                     
         if video_json:
             if self.filetype == "mp4":
