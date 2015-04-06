@@ -14,6 +14,9 @@ def check_url_exists(url):
     """
     Check if a URL exists by HEAD request
     """
+    if url is None:
+        return None
+    
     r = requests.head(url, allow_redirects=True)
     if r.status_code == requests.codes.ok:
         return r.url
@@ -124,12 +127,18 @@ def media(request, doi, xlink = None, filetype = None, redirect = None):
     if (
         (redirect is True or request.QUERY_PARAMS.get('redirect') is not None)
         and len(response_list['data']) == 1):
+        # Only one URL returned and redirect
         headers = {}
         headers['Location'] = response_list['data'][0]['url']
         return Response(
             status=status.HTTP_302_FOUND,
             headers=headers)
+    elif ((redirect is True or request.QUERY_PARAMS.get('redirect') is not None)
+        and len(response_list['data']) < 1):
+        # No URL return and redirect, error 404
+        return Response(status=status.HTTP_404_NOT_FOUND)
     else:
+        # Default with no redirect, return all the data
         return Response(response_list)
     
 @api_view(['GET'])
