@@ -136,17 +136,17 @@ class PdfFile(eLifeFile):
         return eLifeFile.get_size_from_s3(self, bucket_url, prefix)
             
 class MediaFile(eLifeFile):
-    def __init__ (self, doi, xlink, file_type):
+    def __init__ (self, doi, xlink, type):
         eLifeFile.__init__(self)
         self.doi = doi
         self.xlink = xlink
-        self.file_type = file_type
+        self.type = type
         
     def get_url(self):
-        if self.file_type in ['mp4', 'webm', 'ogv', 'jpg']:
-            return self.get_url_from_glencoe(self.file_type)
+        if self.type in ['mp4', 'webm', 'ogv', 'jpg']:
+            return self.get_url_from_glencoe(self.type)
 
-    def get_url_from_glencoe(self, file_type):
+    def get_url_from_glencoe(self, type):
         url = self.glencoe_api_base_url + self.glencoe_metadata_endpoint + self.get_doi()
         r = requests.get(url, allow_redirects=True)
         
@@ -163,11 +163,11 @@ class MediaFile(eLifeFile):
                     video_json = request_json[video]
                     
         if video_json:
-            if self.file_type == "mp4":
+            if self.type == "mp4":
                 return video_json['mp4_href']
-            elif self.file_type == "webm":
+            elif self.type == "webm":
                 return video_json['webm_href']
-            elif self.file_type == "ogv":
+            elif self.type == "ogv":
                 return video_json['ogv_href']
-            elif self.file_type == "jpg":
+            elif self.type == "jpg":
                 return video_json['jpg_href']

@@ -102,7 +102,7 @@ def pdf_by_type(request, doi, type):
     return pdf(request, doi, type)
     
 @api_view(['GET'])
-def media(request, doi, xlink = None, file_type = None, redirect = None):
+def media(request, doi, xlink = None, type = None, redirect = None):
     """
     Get media file locations in JSON format.
     """
@@ -110,14 +110,16 @@ def media(request, doi, xlink = None, file_type = None, redirect = None):
     data = []
     file = None
     
-    # Given a DOI, xlink and file_type
-    if doi is not None and xlink is not None and file_type is not None:
-        file = MediaFile(doi, xlink, file_type)
+    # Given a DOI, xlink and type
+    if doi is not None and xlink is not None and type is not None:
+        file = MediaFile(doi, xlink, type)
         if check_url_exists(file.get_url()) is not None:
             # Add data
             item = {}
+            item['type'] = file.type
+            item['doi'] = file.get_doi()
+            item['doi_id'] = file.get_doi_id()
             item['url'] = file.get_url()
-            item['file_type'] = file_type
             data.append(item)
     
     response_list = {}
@@ -153,23 +155,23 @@ def media_file(request, doi, filename):
     
     try:
         xlink = filename.split(".")[0]
-        file_type = filename.split(".")[1]
+        type = filename.split(".")[1]
     except:
         xlink = None
-        file_type = None
+        type = None
 
     redirect = True
     
-    return media(request, doi, xlink, file_type, redirect)
+    return media(request, doi, xlink, type, redirect)
     
 @api_view(['GET'])
-def media_xlink_format(request, doi, xlink, file_type):
+def media_xlink_format(request, doi, xlink, type):
     """
-    Get a specific media file by specifying the xlink and file_type
-    file_type for videos can be 'jpg', 'mp4', 'ogv', 'webm'
+    Get a specific media file by specifying the xlink and type
+    type for videos can be 'jpg', 'mp4', 'ogv', 'webm'
     
     redirect -- If set (to any value) redirect to the URL
     """
-    return media(request, doi, xlink, file_type)
+    return media(request, doi, xlink, type)
 
     
