@@ -4,3 +4,4 @@
 *.log*
 src/collected-static/**
 venv/*
+src/core/settings.py
