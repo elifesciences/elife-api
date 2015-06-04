@@ -1,5 +1,8 @@
 #!/bin/bash
-virtualenv . && source bin/activate && \
+if [ ! -d venv ]; then
+    virtualenv venv --python=`which python2`
+fi
+source venv/bin/activate && \
 pip install -r requirements.txt && \
-ln -s src/core/dev_settings.py src/core/settings.py && \
+cd src/core/ && ln -sf dev_settings.py settings.py && cd ../../ && \
 cd src && ./manage.py test
