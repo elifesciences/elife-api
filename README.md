@@ -25,3 +25,6 @@ Start the development server to test everything is working:
 
     $ ./manage.py runserver
 
+## using
+
+Go to http://localhost:8000/docs to try it and read documentation.
