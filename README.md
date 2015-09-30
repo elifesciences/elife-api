@@ -28,18 +28,19 @@ generated documentation.
 
 The elife-api project in production at eLife also proxies requests to the APIs
 of our other services. These other services can be accessed like: 
-http://api.elifesciences.org/proxy/<servicename>/api/... 
+`http://api.elifesciences.org/proxy/{servicename}/api/...`
 
 * [Lax](http://lax.elifesciences.org) article data ([github](https://github.com/elifesciences/lax)) http://api.elifesciences.org/proxy/lax/api/
-* [Metrics](http://metrics.elifesciences.org) (article metrics) ([github](https://github.com/elifesciences/elife-metrics)) http://api.elifesciences.org/proxy/metrics/api/
+* Article [Metrics](http://metrics.elifesciences.org) ([github](https://github.com/elifesciences/elife-metrics)) http://api.elifesciences.org/proxy/metrics/api/
 
 For example, here you can access the metrics data used on the elifesciences.org 
 website for the article on the famous Homo Naledi:
 
-[http://2015-09-03.api.elifesciences.org/proxy/metrics/api/v1/article/10.7554/eLife.09560/](http://2015-09-03.api.elifesciences.org/proxy/metrics/api/v1/article/10.7554/eLife.09560/)
+[http://api.elifesciences.org/proxy/metrics/api/v1/article/10.7554/eLife.09560/](http://api.elifesciences.org/proxy/metrics/api/v1/article/10.7554/eLife.09560/)
 
 And here the article data:
-[http://2015-09-03.api.elifesciences.org/proxy/lax/api/v1/article/10.7554/eLife.09560/](http://2015-09-03.api.elifesciences.org/proxy/lax/api/v1/article/10.7554/eLife.09560/)
+
+[http://api.elifesciences.org/proxy/lax/api/v1/article/10.7554/eLife.09560/](http://api.elifesciences.org/proxy/lax/api/v1/article/10.7554/eLife.09560/)
 
 ## Copyright & Licence
 
