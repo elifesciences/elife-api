@@ -1,4 +1,4 @@
-# elife-api
+# elife-api 
 
 This project is an attempt to centralize programmatic article data access to a 
 simple interface accessible using HTTP.
