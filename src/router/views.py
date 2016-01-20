@@ -140,7 +140,7 @@ def media(request, doi, xlink = None, type = None, redirect = None):
     response_list['results'] = len(data)
 
     if (
-        (redirect is True or request.QUERY_PARAMS.get('redirect') is not None)
+        (redirect is True or request.query_params.get('redirect') is not None)
         and len(response_list['data']) == 1):
         # Only one URL returned and redirect
         headers = {}
@@ -148,7 +148,7 @@ def media(request, doi, xlink = None, type = None, redirect = None):
         return Response(
             status=status.HTTP_302_FOUND,
             headers=headers)
-    elif ((redirect is True or request.QUERY_PARAMS.get('redirect') is not None)
+    elif ((redirect is True or request.query_params.get('redirect') is not None)
         and len(response_list['data']) < 1):
         # No URL return and redirect, error 404
         return Response(status=status.HTTP_404_NOT_FOUND)
