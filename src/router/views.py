@@ -5,7 +5,20 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import requests
 from models import *
+from annoying.decorators import render_to
+from os.path import join
+from django.conf import settings
 
+@render_to('router/index.html')
+def index(request):
+    return {
+        'readme': open(join(settings.PROJECT_DIR, 'README.md'), 'r').read()
+    }
+
+
+#
+# utils
+#
 
 def redirect(dest):
     return HttpResponseRedirect(dest)
@@ -127,7 +140,7 @@ def media(request, doi, xlink = None, type = None, redirect = None):
     response_list['results'] = len(data)
 
     if (
-        (redirect is True or request.QUERY_PARAMS.get('redirect') is not None)
+        (redirect is True or request.query_params.get('redirect') is not None)
         and len(response_list['data']) == 1):
         # Only one URL returned and redirect
         headers = {}
@@ -135,7 +148,7 @@ def media(request, doi, xlink = None, type = None, redirect = None):
         return Response(
             status=status.HTTP_302_FOUND,
             headers=headers)
-    elif ((redirect is True or request.QUERY_PARAMS.get('redirect') is not None)
+    elif ((redirect is True or request.query_params.get('redirect') is not None)
         and len(response_list['data']) < 1):
         # No URL return and redirect, error 404
         return Response(status=status.HTTP_404_NOT_FOUND)

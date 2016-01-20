@@ -1,28 +1,45 @@
 # elife-api
 
-This project is an attempt to centralize programmatic article data access to a 
-simple interface accessible using HTTP.
+An effort by [eLife Sciences](http://elifesciences.org) to centralize 
+programmatic article data access to a simple interface accessible using HTTP.
+
+[Github repo](https://github.com/elifesciences/elife-api/).
+
+API documentation can be found here:
+
+* [code](https://github.com/elifesciences/elife-api/blob/master/src/router/urls.py)
+* [Swagger](https://api.elifesciences.org/docs/) (or your [local version](/docs/))
+
+For example, the [Homo Naledi](http://elifesciences.org/content/4/e09560) article:
+
+* [http://api.elifesciences.org/v2/articles/10.7554/eLife.09560/pdf](http://api.elifesciences.org/v2/articles/10.7554/eLife.09560/pdf)
 
 ## installation
 
-    $ ./install.sh
-    $ cd elife-api/src/core/ && ln -s dev_settings.py settings.py  
+[code](https://github.com/elifesciences/elife-api/blob/master/install.sh) 
+
+    git clone https://github.com/elifesciences/elife-api
+    cd elife-api
+    ./install.sh
+
+## updating
+
+[code](https://github.com/elifesciences/elife-api/blob/master/install.sh)  
+
+    ./install.sh
 
 ## testing
 
-Ensure your settings.py is linked first, then:
+[code](https://github.com/elifesciences/elife-api/blob/master/src/router/tests.py)
 
-    $ ./test.sh
+    ./test.sh
 
-## development
+## running
 
-Ensure you are working within the virtualenv then start development server with:
+[code](https://github.com/elifesciences/elife-api/blob/master/manage.sh)
 
-    $ cd src/
-    $ ./manage.py runserver
-
-Go to [http://localhost:8000/docs](http://localhost:8000/docs) for the Swagger
-generated documentation.
+    ./manage.sh runserver
+    firefox http://127.0.0.1:8000/api/docs/
 
 ## proxied APIs 
 

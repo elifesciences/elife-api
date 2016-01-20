@@ -10,13 +10,16 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from os.path import join
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+PROJECT_DIR = os.path.abspath(join(BASE_DIR, '..'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'dummykey=n&(svqdvb+8chcwp-8cgz=uqb*=e$9x8fga1dmrj1gqg896%d#'
+SECRET_KEY = 'dummykey'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -30,11 +33,12 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = (
     #'django.contrib.admin',
-    #'django.contrib.auth',
-    #'django.contrib.contenttypes',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
     #'django.contrib.sessions',
     #'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_markdown2',
 
     'router',
     
@@ -63,7 +67,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -84,5 +88,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-# project root - the dir above 'src'
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'collected-static')
+STATICFILES_DIRS = [
+    join(BASE_DIR, 'static'),
+]
+STATIC_ROOT = join(PROJECT_DIR, 'collected-static')
+
+TEMPLATE_DIRS = [
+    join(BASE_DIR, 'templates'),
+]
