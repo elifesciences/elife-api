@@ -5,7 +5,20 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import requests
 from models import *
+from annoying.decorators import render_to
+from os.path import join
+from django.conf import settings
 
+@render_to('router/index.html')
+def index(request):
+    return {
+        'readme': open(join(settings.PROJECT_DIR, 'README.md'), 'r').read()
+    }
+
+
+#
+# utils
+#
 
 def redirect(dest):
     return HttpResponseRedirect(dest)
