@@ -5,6 +5,9 @@ programmatic article data access to a simple interface accessible using HTTP.
 
 [Github repo](https://github.com/elifesciences/elife-api/).
 
+This project uses the [Python programming language](https://www.python.org/),
+and the [Django web framework](https://www.djangoproject.com/).
+
 API documentation can be found here:
 
 * [code](https://github.com/elifesciences/elife-api/blob/master/src/router/urls.py)
