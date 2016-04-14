@@ -3,6 +3,9 @@
 An effort by [eLife Sciences](http://elifesciences.org) to centralize 
 programmatic article data access to a simple interface accessible using HTTP.
 
+This project uses the [Python programming language](https://www.python.org/),
+and the [Django web framework](https://www.djangoproject.com/).
+
 [Github repo](https://github.com/elifesciences/elife-api/).
 
 API documentation can be found here:
@@ -61,7 +64,7 @@ And here the article data:
 
 ## Copyright & Licence
 
-Copyright 2015 eLife Sciences. Licensed under the [GPLv3](LICENCE.txt)
+Copyright 2016 eLife Sciences. Licensed under the [GPLv3](LICENCE.txt)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
