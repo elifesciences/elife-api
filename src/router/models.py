@@ -11,10 +11,10 @@ class eLifeFile():
     a place for common code
     """
     def __init__ (self):
-        self.cdn_base_url = 'http://cdn.elifesciences.org/'
-        self.s3_base_url = 'http://s3.amazonaws.com/'
+        self.cdn_base_url = 'https://cdn.elifesciences.org/'
+        self.s3_base_url = 'https://s3.amazonaws.com/'
         self.cdn_articles_folder = 'elife-articles/'
-        self.glencoe_api_base_url = 'http://movie-usa.glencoesoftware.com/'
+        self.glencoe_api_base_url = 'https://movie-usa.glencoesoftware.com/'
         self.glencoe_metadata_endpoint = 'metadata/'
         
         # Bucket names
