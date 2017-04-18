@@ -1,33 +1,40 @@
-"""
-DEV settings for core project.
+"""generalised settings for the elife-api project. 
 
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
+example settings can be found in elife.cfg
+dev settings can be found in /path/to/api/dev.cfg
 
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
-"""
+./install.sh will create a symlink from dev.cfg -> lax.cfg if lax.cfg not found."""
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from os.path import join
+from datetime import datetime
+import ConfigParser as configparser
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-PROJECT_DIR = os.path.abspath(join(BASE_DIR, '..'))
+SRC_DIR = os.path.dirname(os.path.dirname(__file__)) # ll: /path/to/app/src/
+PROJECT_DIR = os.path.dirname(SRC_DIR)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
+CFG_NAME = 'app.cfg'
+DYNCONFIG = configparser.SafeConfigParser(**{
+    'allow_no_value': True,
+    'defaults': {'dir': SRC_DIR}})
+DYNCONFIG.read(join(PROJECT_DIR, CFG_NAME)) # ll: /path/to/lax/app.cfg
+
+def cfg(path, default=0xDEADBEEF):
+    try:
+        return DYNCONFIG.get(*path.split('.'))
+    except configparser.NoOptionError:
+        # given key in section hasn't been defined
+        if default == 0xDEADBEEF:
+            raise ValueError("no value set for setting at %r" % path)
+        return default
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'dummykey'
+SECRET_KEY = cfg('general.secret-key')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = cfg('general.debug')
+TEMPLATE_DEBUG = DEBUG
 
-TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = cfg('general.allowed-hosts', '').split(',')
 
 # Application definition
 
@@ -60,17 +67,18 @@ ROOT_URLCONF = 'core.urls'
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# Testing
-TEST_RUNNER = 'xmlrunner.extra.djangotestrunner.XMLTestRunner'
-TEST_OUTPUT_DIR = 'xml'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': cfg('database.engine'),
+        'NAME': cfg('database.name'),
+        'USER': cfg('database.user'),
+        'PASSWORD': cfg('database.password'),
+        'HOST': cfg('database.host'),
+        'PORT': cfg('database.port')
     }
 }
 
@@ -92,10 +100,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    join(BASE_DIR, 'static'),
+    join(SRC_DIR, 'static'),
 ]
 STATIC_ROOT = join(PROJECT_DIR, 'collected-static')
 
 TEMPLATE_DIRS = [
-    join(BASE_DIR, 'templates'),
+    join(SRC_DIR, 'templates'),
 ]
