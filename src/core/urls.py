@@ -1,7 +1,6 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^proxy/', include('proxy.urls')),
-    url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'', include('router.urls')),
-)
+]

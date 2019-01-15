@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+# remove any old compiled python files
+find src/ -name '*.py[c|~]' -delete
 source install.sh
 pylint -E src/** --load-plugins=pylint_django --disable=E1103
 echo "* passed linting"
