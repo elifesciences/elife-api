@@ -32,7 +32,6 @@ def cfg(path, default=0xDEADBEEF):
 SECRET_KEY = cfg('general.secret-key')
 
 DEBUG = cfg('general.debug')
-TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = cfg('general.allowed-hosts', '').split(',')
 
@@ -103,6 +102,9 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = join(PROJECT_DIR, 'collected-static')
 
-TEMPLATE_DIRS = [
-    join(SRC_DIR, 'templates'),
-]
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [
+        join(SRC_DIR, 'templates'),
+    ]
+}]
