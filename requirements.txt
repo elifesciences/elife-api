@@ -1,6 +1,6 @@
 coverage==4.0.3
 Django==1.11.18
-django-annoying==0.8.5
+django-annoying==0.10.4
 django-markdown2==0.2.1
 djangorestframework==3.3.2
 pylint==1.5.4
