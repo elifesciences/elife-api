@@ -2,8 +2,8 @@
 *~
 *.sqlite*
 *.log*
-src/collected-static/**
-venv/*
+src/collected-static/
+venv/
 .coverage
 xml/
 app.cfg

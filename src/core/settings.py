@@ -50,7 +50,6 @@ INSTALLED_APPS = (
     'router',
     
     'rest_framework',
-    'rest_framework_swagger',
 )
 
 MIDDLEWARE_CLASSES = (
