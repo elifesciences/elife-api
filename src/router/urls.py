@@ -1,7 +1,7 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from router import views
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^v2/hello_world', views.hello_world),
     url(r'^v2/articles/(?P<doi>[!/]*[/]{0,1}.+)/pdf$', views.pdf),
     url(r'^v2/articles/(?P<doi>[!/]*[/]{0,1}.+)/pdf/(?P<type>article$|figures$)', views.pdf_by_type),
@@ -12,5 +12,5 @@ urlpatterns = patterns('',
 
     url(r'^$', views.index),
 
-)
+]
 
