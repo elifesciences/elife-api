@@ -7,7 +7,6 @@ dev settings can be found in /path/to/api/dev.cfg
 
 import os
 from os.path import join
-from datetime import datetime
 import ConfigParser as configparser
 
 SRC_DIR = os.path.dirname(os.path.dirname(__file__)) # ll: /path/to/app/src/

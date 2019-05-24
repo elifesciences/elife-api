@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.test.client import Client
-from models import *
+from models import eLifeFile, MediaFile
 
 class Routing(TestCase):
     def setUp(self):
