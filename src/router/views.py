@@ -1,10 +1,14 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
+#from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.decorators.http import require_GET
+#from rest_framework import status
+#from rest_framework.response import Response
+#from rest_framework.decorators import api_view
+
 import requests
-from models import *
+import json
+#from models import *
+from models import PdfFile, MediaFile
 from annoying.decorators import render_to
 from os.path import join
 from django.conf import settings
@@ -20,8 +24,8 @@ def index(request):
 # utils
 #
 
-def redirect(dest):
-    return HttpResponseRedirect(dest)
+#def redirect(dest):
+#    return HttpResponseRedirect(dest)
 
 def check_url_exists(url):
     """
@@ -37,11 +41,17 @@ def check_url_exists(url):
         return None
     return None
 
-@api_view(['GET'])
-def hello_world(request):
-    return Response({"message": "Hello, world!"})
+def json_response(data, status=200):
+    return HttpResponse(json.dumps(data, indent=4), content_type="application/json", status=status)
 
-@api_view(['GET'])
+#@api_view(['GET'])
+@require_GET
+def hello_world(request):
+    #return Response({"message": "Hello, world!"})
+    return json_response({"message": "Hello, world!"})
+
+#@api_view(['GET'])
+@require_GET
 def example_route(request, arg1, arg2):
     """
     This text description for this API call
@@ -50,14 +60,16 @@ def example_route(request, arg1, arg2):
     """
         
     # Quick hack to get a Location redirect
-    redirect_response = redirect('http://example.org/%s/%s/' % (arg1, arg2))
-    headers = {}
-    headers['Location'] = redirect_response.url
-    return Response(
-        status=status.HTTP_302_FOUND,
-        headers=headers)
+    #redirect_response = redirect('http://example.org/%s/%s/' % (arg1, arg2))
+    #headers = {}
+    #headers['Location'] = redirect_response.url
+    #return Response(
+    #    status=302, #status.HTTP_302_FOUND,
+    #    headers=headers)
+    return HttpResponseRedirect('http://example.org/%s/%s/' % (arg1, arg2))
 
-@api_view(['GET'])
+#@api_view(['GET'])
+@require_GET
 def pdf(request, doi, type = None):
     """
     Get PDF file locations in JSON format.
@@ -94,7 +106,7 @@ def pdf(request, doi, type = None):
                 pass
                
         except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return HttpResponse(status=404) #status.HTTP_404_NOT_FOUND)
 
     response_list = {}
     response_list['data'] = data
@@ -104,9 +116,11 @@ def pdf(request, doi, type = None):
         response_list['notes'] = notes
     response_list['results'] = len(data)
 
-    return Response(response_list)
+    #return Response(response_list)
+    return json_response(response_list)
 
-@api_view(['GET'])
+#@api_view(['GET'])
+@require_GET
 def pdf_by_type(request, doi, type):
     """
     Get a PDF file URI
@@ -114,7 +128,8 @@ def pdf_by_type(request, doi, type):
     """
     return pdf(request, doi, type)
     
-@api_view(['GET'])
+#@api_view(['GET'])
+@require_GET
 def media(request, doi, xlink = None, type = None, redirect = None):
     """
     Get media file locations in JSON format.
@@ -139,24 +154,39 @@ def media(request, doi, xlink = None, type = None, redirect = None):
     response_list['data'] = data
     response_list['results'] = len(data)
 
+    query_params = request.GET
+    
+    #if (
+    #    (redirect is True or request.query_params.get('redirect') is not None)
+    #    and len(response_list['data']) == 1):
+
     if (
-        (redirect is True or request.query_params.get('redirect') is not None)
+        (redirect is True or query_params.get('redirect') is not None)
         and len(response_list['data']) == 1):
+        
         # Only one URL returned and redirect
-        headers = {}
-        headers['Location'] = response_list['data'][0]['url']
-        return Response(
-            status=status.HTTP_302_FOUND,
-            headers=headers)
-    elif ((redirect is True or request.query_params.get('redirect') is not None)
+        #headers = {}
+        #headers['Location'] = response_list['data'][0]['url']
+        #return Response(
+        #    status=302 #status.HTTP_302_FOUND,
+        #    headers=headers)
+        return HttpResponseRedirect(response_list['data'][0]['url'])
+    
+    #elif ((redirect is True or request.query_params.get('redirect') is not None)
+    #    and len(response_list['data']) < 1):
+    elif ((redirect is True or query_params.get('redirect') is not None)
         and len(response_list['data']) < 1):
+    
         # No URL return and redirect, error 404
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return HttpResponse(status=404) #status.HTTP_404_NOT_FOUND)
+    
     else:
         # Default with no redirect, return all the data
-        return Response(response_list)
+        #return Response(response_list)
+        return json_response(response_list)
     
-@api_view(['GET'])
+#@api_view(['GET'])
+@require_GET
 def media_file(request, doi, filename):
     """
     Get a specific media file
@@ -177,7 +207,8 @@ def media_file(request, doi, filename):
     
     return media(request, doi, xlink, type, redirect)
     
-@api_view(['GET'])
+#@api_view(['GET'])
+@require_GET
 def media_xlink_format(request, doi, xlink, type):
     """
     Get a specific media file by specifying the xlink and type
