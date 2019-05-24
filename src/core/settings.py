@@ -47,8 +47,6 @@ INSTALLED_APPS = (
     'django_markdown2',
 
     'router',
-    
-    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (
