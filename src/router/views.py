@@ -80,7 +80,7 @@ def pdf(request, doi, type = None):
                 pass
                
         except:
-            return HttpResponse(status=404) #status.HTTP_404_NOT_FOUND)
+            return HttpResponse(status=404)
 
     response_list = {}
     response_list['data'] = data
